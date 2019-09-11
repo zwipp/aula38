@@ -40,6 +40,16 @@ class ProdutosController extends Controller
 
     public function update($id){
 
+        //validar o request
+        request()->validate(
+            [
+                'nome' => 'required',
+                'preco' => 'required|gt:0|lt:999.99',
+                'quantidade' => 'required|gt:0|lt:999.99',
+                'categoria' => 'required'
+            ]
+            );
+
         //carregando o produto da BD
         $produto = Produto::find($id);
 
@@ -66,5 +76,40 @@ class ProdutosController extends Controller
 
         //retorna para a pagina produto
         return redirect('/produtos');
+    }
+
+    public function create(){
+
+        //carregar as categorias
+        $categoria = Categoria::all();
+
+        return view('produtos.create', compact('categoria'));
+    }
+
+    public function store(){
+
+        //validar o request
+        request()->validate(
+            [
+                'nome' => 'required', //obrigatorio
+                'preco' => 'required|gt:0|lt:999.99', //obrigatorio com quantidade minima de 0 e maxima de 999.99
+                'quantidade' => 'required|gt:0|lt:999.99',
+                'categoria' => 'required'
+            ]
+        );
+
+        //criar um novo produto
+        $p = new Produto();
+
+        //criar os campos do novo produto
+        $p->nome = request('nome'); //quando passa uma string vai procurar qual o campo igual e vai sobreescrever com o valor dado
+        $p->preco = request('preco');
+        $p->quantidade = request('quantidade');
+        $p->id_categoria = request('categoria');
+
+
+        $p->save(); // salvar as alterações no BD
+
+        return redirect('/produtos'); //retornar para a pagina de produtos
     }
 }
