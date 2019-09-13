@@ -89,7 +89,7 @@ class ProdutosController extends Controller
     public function store(){
 
         //validar o request
-        request()->validate(
+        request()->validate( //verifica se as regras foram cumpridas, se nao for retorna ele a pagina que estava e nao manda o formulario
             [
                 'nome' => 'required', //obrigatorio
                 'preco' => 'required|gt:0|lt:999.99', //obrigatorio com quantidade minima de 0 e maxima de 999.99
@@ -103,7 +103,7 @@ class ProdutosController extends Controller
 
         //criar os campos do novo produto
         $p->nome = request('nome'); //quando passa uma string vai procurar qual o campo igual e vai sobreescrever com o valor dado
-        $p->preco = request('preco');
+        $p->preco = request('preco'); //carregar os dados que usuario enviou 
         $p->quantidade = request('quantidade');
         $p->id_categoria = request('categoria');
 
